@@ -1,6 +1,6 @@
-#VTuberPlus Integration Extension for LioranBoard 2
-##by Caigan and Erdenshire
-###version 1
+# VTuberPlus Integration Extension for LioranBoard 2
+## by Caigan and Erdenshire
+### version 1
 
 
 [INSTALL]
