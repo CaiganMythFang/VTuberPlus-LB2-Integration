@@ -4,7 +4,7 @@ version 1
 ----------
 
 --INSTALL--
-In LioranBoard 2 main menu, click the Transmitter button on the left side, and click Install Extension. Select the [vtuberplusintegration.lb2] file.
+In LioranBoard 2 main menu, click the Transmitter button on the left side, and click Install Extension. Select the [vtuberplusintegration-v1.lb2] file.
 
 --USAGE--
 This extension connects to the VTuberPlus Websocket, and adds a command to LioranBoard 2 so you can send commands to VTuberPlus and activate the various items and effects.
