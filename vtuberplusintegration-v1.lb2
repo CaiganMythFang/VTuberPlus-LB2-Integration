@@ -1,0 +1,62 @@
+[extension_name]
+VTuberPlus Message
+
+[extension_info]
+Written by Caigan and Erdenshire
+
+[insert_external]
+<div>
+  <p>VTuberPlus Message<small> Sends a WebSocket message to VTuberPlus</small></p>
+</div>
+[insert_command]
+LB.extCommand("VTPMessage", color = 3355443, height = 52, 
+  {
+    vtpMessage: ["Message", 20, "VTP_Throw", null, [
+      "VTP_Throw", "VTP_Drop", "VTP_Food", "VTP_Confetti", "VTP_Bucket", "VTP_Light", "VTP_Splash",
+      "VTP_Camera:1", "VTP_Camera:2",
+      "VTP_Avatar:1", "VTP_Avatar:2", "VTP_Avatar:3", "VTP_Avatar:4", "VTP_Avatar:5", "VTP_Avatar:6", "VTP_Avatar:7",
+      "VTP_FX:Blur", "VTP_FX:Glitch", "VTP_FX:Grayscale", "VTP_FX:Pixelate", "VTP_FX:Rainbow", "VTP_FX:Shake", "VTP_FX:Wave"
+    ]]
+  });
+[insert_hook]
+case "VTPMessage":{
+  VTPMessage(LioranBoardJSON.vtpMessage);
+} break
+[insert_script]
+const VTP_VERBOSE = true;
+const VTP_SERVER = 'ws://localhost:4430/vtplus';
+
+function openVtpSocket() {
+  if (!window.vtpMessageQueue) window.vtpMessageQueue = [];
+  if (!window.vtpSocket || window.vtpSocket.readyState === 3) {
+    window.vtpSocket = new WebSocket(VTP_SERVER);
+
+    window.vtpSocket.onopen = function(event) {
+      VTP_VERBOSE && console.log("VTP: Connected");
+      while (window.vtpMessageQueue.length) {
+        window.vtpSocket.send(vtpMessageQueue.shift());
+      }
+    }
+
+    window.vtpSocket.onclose = function(event) {
+      VTP_VERBOSE && console.log(`VTP: Disconnected(${event.code || "No code provided"}, ${event.reason || "No reason provided"}), reconnecting in 5 seconds`);
+      LB.alert('VTP: Disconnected, reconnecting in 5 seconds');
+      setTimeout(openVtpSocket, 5000);
+    }
+  } else if (window.vtpSocket.readyState === 2) {
+    VTP_VERBOSE && console.log(`VTP: Closure pending, waiting 5 seconds to reopen`);
+    setTimeout(openVtpSocket, 5000);
+  }
+}
+
+function VTPMessage(vtpMessage) {
+  if (window.vtpSocket && window.vtpSocket.readyState == 1) {
+    window.vtpSocket.send(vtpMessage);
+  } else {
+    VTP_VERBOSE && console.log(`VTP: ${window.vtp ? 'Connection pending(' + window.vtpSocket.readyState + ')' : 'Websocket not instantiated'}, adding message to queue`);
+    window.vtpMessageQueue.push(vtpMessage);
+  }
+};
+
+openVtpSocket();
+[insert_over]
